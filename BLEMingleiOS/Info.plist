@@ -26,6 +26,14 @@
 	<true/>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>It uses bluetooth to communicate</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
+		<string>fetch</string>
+		<string>location</string>
+		<string>processing</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>Main</string>
 	<key>UIMainStoryboardFile</key>
