@@ -26,8 +26,8 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" text="Touch to type into this box." translatesAutoresizingMaskIntoConstraints="NO" id="hRd-Ll-xmW">
-                                <rect key="frame" x="20" y="160" width="388" height="110"/>
-                                <color key="backgroundColor" red="0.38800000000000001" green="0.38800000000000001" blue="0.38800000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="20" y="380" width="388" height="110"/>
+                                <color key="backgroundColor" white="0.58968895690000001" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="100" height="0.0"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="110" id="b3C-gk-xpO"/>
@@ -36,16 +36,8 @@
                                 <fontDescription key="fontDescription" name="ArialMT" family="Arial" pointSize="20"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ivs-M1-6oy">
-                                <rect key="frame" x="0.0" y="282" width="321" height="199"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I3h-hh-YXt">
-                                <rect key="frame" x="20" y="290" width="388" height="50"/>
+                                <rect key="frame" x="20" y="510" width="388" height="50"/>
                                 <color key="backgroundColor" red="0.184" green="0.184" blue="0.184" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="100" height="0.0"/>
                                 <constraints>
@@ -60,22 +52,44 @@
                                     <action selector="sendData:" destination="RUy-Y0-0mX" eventType="touchUpInside" id="3Dn-tn-cEK"/>
                                 </connections>
                             </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ivs-M1-6oy">
+                                <rect key="frame" x="20" y="140" width="388" height="200"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="WyI-wW-LRR"/>
+                                </constraints>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="UMc-LM-Y3Y" firstAttribute="top" secondItem="2bZ-c1-daa" secondAttribute="bottom" constant="20" id="Bmp-Lg-99t"/>
+                            <constraint firstItem="ivs-M1-6oy" firstAttribute="top" secondItem="UMc-LM-Y3Y" secondAttribute="bottom" constant="20" id="DCL-9z-6k4"/>
+                            <constraint firstItem="ivs-M1-6oy" firstAttribute="leading" secondItem="sWl-Am-Hvi" secondAttribute="leadingMargin" id="KC9-aZ-EnL"/>
                             <constraint firstItem="hRd-Ll-xmW" firstAttribute="leading" secondItem="sWl-Am-Hvi" secondAttribute="leading" constant="20" id="L9C-xJ-4YG"/>
                             <constraint firstItem="I3h-hh-YXt" firstAttribute="leading" secondItem="sWl-Am-Hvi" secondAttribute="leading" constant="20" id="hHT-jk-pvg"/>
                             <constraint firstAttribute="trailing" secondItem="UMc-LM-Y3Y" secondAttribute="trailing" id="hhh-Po-6Eg"/>
                             <constraint firstAttribute="trailing" secondItem="I3h-hh-YXt" secondAttribute="trailing" constant="20" id="jak-Ik-J6r"/>
                             <constraint firstItem="I3h-hh-YXt" firstAttribute="top" secondItem="hRd-Ll-xmW" secondAttribute="bottom" constant="20" id="mFP-2Q-B5b"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ivs-M1-6oy" secondAttribute="trailing" id="nJ5-Od-YzX"/>
                             <constraint firstItem="UMc-LM-Y3Y" firstAttribute="leading" secondItem="sWl-Am-Hvi" secondAttribute="leading" id="sns-Vy-VUF"/>
-                            <constraint firstItem="hRd-Ll-xmW" firstAttribute="top" secondItem="UMc-LM-Y3Y" secondAttribute="bottom" constant="40" id="uQg-5c-eDS"/>
+                            <constraint firstItem="hRd-Ll-xmW" firstAttribute="top" secondItem="UMc-LM-Y3Y" secondAttribute="bottom" constant="260" id="uQg-5c-eDS"/>
                             <constraint firstAttribute="trailing" secondItem="hRd-Ll-xmW" secondAttribute="trailing" constant="20" id="wqo-BF-1XJ"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="textView" destination="hRd-Ll-xmW" id="0SA-Id-XMb"/>
+                        <outlet property="textView2" destination="ivs-M1-6oy" id="e79-W7-YyF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tmp-iq-O2d" userLabel="First Responder" sceneMemberID="firstResponder"/>

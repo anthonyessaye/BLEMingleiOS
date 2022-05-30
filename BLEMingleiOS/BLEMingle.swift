@@ -7,6 +7,7 @@ extension String {
             let myNSString = self as NSString
             let start = r.lowerBound
             let length = r.upperBound - start + 1
+            
             return myNSString.substring(with: NSRange(location: start, length: length))
         }
     }
@@ -93,13 +94,13 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
         lastString = ""
         usedList = ["Zygats","Quiltiberry"]
         newList = usedList
-        print("initCentral")
+        print("[BLEMingle]: " + "initCentral")
     }
     
     func startScan() {
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
         
-        print("Scanning started")
+        print("[BLEMingle]: " + "Scanning started")
     }
     
     func didDiscoverPeripheral(peripheral: CBPeripheral!) -> CBPeripheral! {
@@ -113,7 +114,7 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
     func stopScan() {
         centralManager.stopScan()
         
-        print("Scanning stopped")
+        print("[BLEMingle]: " + "Scanning stopped")
     }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -121,11 +122,11 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
     }
     
     
-    func hexToScalar(char: String) -> UnicodeScalar {
+    func hexToScalar(char: String) -> UnicodeScalar? {
         var total = 0
         for scalar in char.uppercased().unicodeScalars {
-            if !(scalar >= "A" && scalar <= "F" || scalar >= "0" && scalar <= "9") {
-                assertionFailure("Input is wrong")
+             if !(scalar >= "A" && scalar <= "F" || scalar >= "0" && scalar <= "9") {
+                print(scalar)
             }
             
             if scalar >= "A" {
@@ -134,43 +135,63 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
                 total = 16 * total + Int(scalar.value) - 48 /* '0' */
             }
         }
-        return UnicodeScalar(total)!
+        return UnicodeScalar(total)
     }
     
     func centralManager(_: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi: NSNumber){
         
         delegate?.didDiscoverPeripheral(peripheral)
         let splitUp : [String] = "\(advertisementData)".components(separatedBy: "\n")
+        
         if (splitUp.count > 1)
         {
             var chop = splitUp[1]
             let counter = chop.count - 2
-            chop = chop[0..<counter]
-            let chopSplit : [String] = "\(chop)".components(separatedBy: "\"")
             
-            if !(chopSplit.count > 1 && chopSplit[1] == "Device Information")
-            {
-                let hexString = chop[4..<7] + chop[12..<19] + chop[21..<26]
-                let hexArray = [hexString[0..<1], hexString[2..<3], hexString[4..<5], hexString[6..<7], hexString[8..<9], hexString[10..<11], hexString[12..<13], hexString[14..<15], hexString[16..<17]]
-                let charArray = hexArray.map { Character(hexToScalar(char: $0)) }
-                var string = String(charArray) as String?
-                if (string == nil) {
-                } else if (!usedList.contains(string!))
-                {
-                    usedList.append(string!)
-                    let this_count = string!.count
-                    if (this_count == 9 && string![this_count-1..<this_count-1] == "-")
-                    {
-                        finalString = finalString + string![0..<this_count-2]
+            if counter >= 0 {
+            
+                chop = chop[0..<counter]
+
+                let chopSplit : [String] = "\(chop)".components(separatedBy: "\"")
+                
+                if !(chopSplit.count > 1 && chopSplit[1] == "Device Information") {
+                    let hexString = chop[4..<7] + chop[12..<19] + chop[21..<26]
+                    let hexArray = [hexString[0..<1], hexString[2..<3], hexString[4..<5], hexString[6..<7], hexString[8..<9], hexString[10..<11], hexString[12..<13], hexString[14..<15], hexString[16..<17]]
+                     
+                    var currentScalar: UnicodeScalar?
+                    
+                    for char in hexArray {
+                        currentScalar = hexToScalar(char: char)
+                        if currentScalar == nil {
+                            break
+                        }
                     }
-                    else
-                    {
-                        lastString = finalString + string! + "\n" as NSString
-                        print(lastString)
-                        finalString = ""
-                        usedList = newList
-                        usedList.append(string!)
+                     
+                    
+                    if currentScalar != nil {
+                    let charArray = hexArray.map { Character(hexToScalar(char: $0)!) }
+                    let string = String(charArray) as String?
+                        if (string == nil) {
+                        }
+                        
+                        else if (!usedList.contains(string!)) {
+                            usedList.append(string!)
+                            let this_count = string!.count
+                            if (this_count == 9 && string![this_count-1..<this_count-1] == "-")
+                            {
+                                finalString = finalString + string![0..<this_count-2]
+                            }
+                            else
+                            {
+                                lastString = finalString + string! + "\n" as NSString
+                                print("[BLEMingle]: " + (lastString as String))
+                                finalString = ""
+                                usedList = newList
+                                usedList.append(string!)
+                            }
+                        }
                     }
+                    
                 }
             }
         }
@@ -182,10 +203,9 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
     
     func centralManager(_: CBCentralManager, didConnect peripheral: CBPeripheral) {
         
-        print("Connected to peripheral: \(peripheral)")
+        print("[BLEMingle]: " + "Connected to peripheral: \(peripheral)")
         
         peripheral.delegate = self
-        
         peripheral.discoverServices([CBUUID(string: TRANSFER_SERVICE_UUID)])
     }
     
@@ -201,11 +221,11 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         
-        print("didDiscoverCharacteristicsForService: \(service)")
+        print("[BLEMingle]: " + "didDiscoverCharacteristicsForService: \(service)")
         
         for characteristic in service.characteristics ?? [] {
             if ((characteristic ).uuid.isEqual(CBUUID(string: TRANSFER_CHARACTERISTIC_UUID))) {
-                print("Discovered characteristic: \(characteristic)")
+                print("[BLEMingle]: " + "Discovered characteristic: \(characteristic)")
                 peripheral .setNotifyValue(true, for: characteristic )
             }
         }
@@ -219,7 +239,7 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
         let stringFromData = NSString(data: characteristic.value!, encoding: String.Encoding.utf8.rawValue)
         
         if (stringFromData! == "EOM") {
-            print("Data Received: \(NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue))")
+            print("[BLEMingle]: " + "Data Received: \(NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue))")
             data.length = 0
                         peripheral.setNotifyValue(false, for: characteristic)
                         centralManager.cancelPeripheralConnection(peripheral)
@@ -239,16 +259,16 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
         }
         
         if characteristic.isNotifying {
-            print("Notification began on: \(characteristic)")
+            print("[BLEMingle]: " + "Notification began on: \(characteristic)")
         }
         else {
-            print("Notification stopped on: \(characteristic). Disconnecting")
+            print("[BLEMingle]: " + "Notification stopped on: \(characteristic). Disconnecting")
             centralManager.cancelPeripheralConnection(peripheral)
         }
     }
     
     func centralManager(_: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("Peripheral Disconnected")
+        print("[BLEMingle]: " + "Peripheral Disconnected")
         discoveredPeripheral = nil
     }
     
@@ -330,7 +350,7 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
             // Fallback on earlier versions
         }
         
-        print("self.peripheralManager powered on.")
+        print("[BLEMingle]: " + "self.peripheralManager powered on.")
         
         transferCharacteristic = CBMutableCharacteristic(type: CBUUID(string: TRANSFER_CHARACTERISTIC_UUID), properties: CBCharacteristicProperties.notify, value: nil, permissions: CBAttributePermissions.readable)
         
@@ -344,12 +364,12 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
     
     func peripheralManager(peripheral: CBPeripheralManager, central: CBCentral, didSubscribeToCharacteristic characteristic: CBCharacteristic) {
         
-        print("Central subscribed to characteristic: \(characteristic)")
+        print("[BLEMingle]: " + "Central subscribed to characteristic: \(characteristic)")
     }
     
     func peripheralManager(peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFromCharacteristic characteristic: CBCharacteristic) {
         
-        print("Central unsubscribed from characteristic")
+        print("[BLEMingle]: " + "Central unsubscribed from characteristic")
     }
     
     func transferData() {
@@ -360,7 +380,7 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
             if didSend {
                 
                 sendingEOM = false
-                print("sending EOM")
+                print("[BLEMingle]: " + "sending EOM")
                 //sleep(10000)
                 peripheralManager.stopAdvertising()
             }
@@ -382,17 +402,17 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
             }
             
             var chunk = NSData(bytes: dataToSend.bytes + sendDataIndex, length: amountToSend)
-            print("chunk: \(NSString(data: chunk as Data, encoding: String.Encoding.utf8.rawValue)!)")
+            print("[BLEMingle]: " + "chunk: \(NSString(data: chunk as Data, encoding: String.Encoding.utf8.rawValue)!)")
             
             didSend = peripheralManager.updateValue(chunk as Data, for: transferCharacteristic, onSubscribedCentrals: nil)
             
             if !didSend {
-                print("didnotsend")
+                print("[BLEMingle]: " + "didnotsend")
                 return;
             }
             
             var stringFromData = NSString(data: chunk as Data, encoding: String.Encoding.utf8.rawValue)
-            print("Sent: " + (stringFromData! as String))
+            print("[BLEMingle]: " + "Sent: " + (stringFromData! as String))
             
             sendDataIndex = sendDataIndex + amountToSend
             
@@ -403,7 +423,7 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
                 
                 if eomSent {
                     sendingEOM = false
-                    print("Sending EOM")
+                    print("[BLEMingle]: " + "Sending EOM")
                 }
                 
                 return
@@ -412,7 +432,7 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
     }
     
     func peripheralManagerIsReadyToUpdateSubscribers(peripheral: CBPeripheralManager) {
-        print("Ready to transfer")
+        print("[BLEMingle]: " + "Ready to transfer")
         transferData()
     }
 }

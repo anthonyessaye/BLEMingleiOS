@@ -26,10 +26,13 @@
 	<true/>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>It uses bluetooth to communicate</string>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Our app uses bluetooth to find, connect and transfer data between different devices</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>
 		<string>bluetooth-peripheral</string>
+		<string>external-accessory</string>
 		<string>fetch</string>
 		<string>location</string>
 		<string>processing</string>

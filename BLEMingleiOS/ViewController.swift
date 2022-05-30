@@ -4,15 +4,27 @@ import CoreBluetooth
 class ViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet var textView: UITextView!
-    @IBOutlet var Abel: UISwitch!
+    @IBOutlet weak var textView2: UITextView!
     var bleMingle: BLEMingle!
 
+    @IBAction func sendData(_ sender: AnyObject) {
+        let dataToSend = textView.text.data(using: String.Encoding.utf8)
+
+        bleMingle.sendDataToPeripheral(data: dataToSend! as NSData)
+        
+        DispatchQueue.main.async { [self] in
+            textView.text = ""
+        }
+    }
+    
     func toggleSwitch() {
         var lastMessage = ""
         var allText = ""
+        
         bleMingle.startScan()
-        let priority = DispatchQueue.GlobalQueuePriority.default
-        DispatchQueue.global(priority: priority).async {
+        
+        let dispatchQueue = DispatchQueue.global(qos: .background)
+        dispatchQueue.async {
             while (true)
             {
                 let temp:String = self.bleMingle.lastString as String
@@ -28,27 +40,25 @@ class ViewController: UIViewController, UITextViewDelegate {
         }
     }
 
-    @IBAction func sendData(_ sender: AnyObject) {
-        let dataToSend = textView.text.data(using: String.Encoding.utf8)
-
-        bleMingle.sendDataToPeripheral(data: dataToSend! as NSData)
-        textView.text = ""
-    }
-
-    func updateView(_ message: String) {
-        let textView2 = self.view.viewWithTag(2) as! UITextView
+    func updateView(_ message: String) { 
         textView2.text = message
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        textView.autocorrectionType = .no
+        textView2.autocorrectionType = .no
 
         bleMingle = BLEMingle()
         textView.delegate = self
+        textView.backgroundColor = .black
+        textView.textColor = .white
 
-        let delay = 2.000 * Double(NSEC_PER_SEC)
-        let time = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.asyncAfter(deadline: time, execute: { () -> Void in self.toggleSwitch() });
+        let delay = 2.0
+        let time = DispatchTime.now() + delay
+        DispatchQueue.main.asyncAfter(deadline: time) {
+            self.toggleSwitch()
+        }
 
     }
 
@@ -58,8 +68,4 @@ class ViewController: UIViewController, UITextViewDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
-//    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
-//        self.view.endEditing(true)
-//    }
 }
