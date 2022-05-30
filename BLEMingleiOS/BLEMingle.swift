@@ -192,6 +192,10 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
                         }
                     }
                     
+                    else {
+                        lastString = "Tried Parsing something I can't understand"
+                    }
+                    
                 }
             }
         }
