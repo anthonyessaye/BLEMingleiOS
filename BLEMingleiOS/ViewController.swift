@@ -36,6 +36,7 @@ class ViewController: UIViewController, UITextViewDelegate {
                     }
                     lastMessage = temp
                 }
+                
             }
         }
     }
@@ -51,8 +52,10 @@ class ViewController: UIViewController, UITextViewDelegate {
 
         bleMingle = BLEMingle()
         textView.delegate = self
-        textView.backgroundColor = .black
+        textView.backgroundColor = .gray
         textView.textColor = .white
+        
+        textView.text = ""
 
         let delay = 2.0
         let time = DispatchTime.now() + delay
