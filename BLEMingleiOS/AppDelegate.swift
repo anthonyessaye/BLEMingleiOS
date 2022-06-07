@@ -8,6 +8,7 @@
 
 
 import UIKit
+import CoreBluetooth
 
 
 @UIApplicationMain

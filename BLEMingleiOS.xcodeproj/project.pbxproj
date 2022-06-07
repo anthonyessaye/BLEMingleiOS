@@ -297,7 +297,7 @@
 				CODE_SIGN_ENTITLEMENTS = BLEMingleiOS/BLEMingleiOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = GUAZ34H2A6;
+				DEVELOPMENT_TEAM = Y9TRL6AF2W;
 				INFOPLIST_FILE = BLEMingleiOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -359,7 +359,7 @@
 				CODE_SIGN_ENTITLEMENTS = BLEMingleiOS/BLEMingleiOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = GUAZ34H2A6;
+				DEVELOPMENT_TEAM = Y9TRL6AF2W;
 				INFOPLIST_FILE = BLEMingleiOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -98,7 +98,9 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
     }
     
     func startScan() {
-        centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+        //"00002A00-0000-1000-8000-00805F9B34FB"
+        //"01613432-3030-6861-6971-706467756d63".uppercased()
+        centralManager.scanForPeripherals(withServices: [CBUUID(string: "00002A00-0000-1000-8000-00805F9B34FB")], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
         
         print("[BLEMingle]: " + "Scanning started")
     }
@@ -138,9 +140,16 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
         return UnicodeScalar(total)
     }
     
+    var count = 0
+    
     func centralManager(_: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi: NSNumber){
         
         delegate?.didDiscoverPeripheral(peripheral)
+        count += 1
+        print(peripheral.name ?? "No Name " + String(count))
+        print(advertisementData[CBAdvertisementDataOverflowServiceUUIDsKey])
+        print(advertisementData)
+        
         let splitUp : [String] = "\(advertisementData)".components(separatedBy: "\n")
         
         if (splitUp.count > 1)
@@ -295,11 +304,6 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
         let hexData: NSData! = rev.data(using: String.Encoding.utf8, allowLossyConversion: false) as! NSData
         dataToSend = hexData
         
-        // String Structure = "xxxxYYYYYYYYYYzzzz'
-        // x -> CRC
-        // y -> coupon
-        // z -> studyId
-        
         rev =  String(calcCRC8(Array(hex.utf8))) + hexData.toHexString()
         
         while(rev.count < 32) {
@@ -396,8 +400,8 @@ class BLEMingle: NSObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate
         if name[0] != "" {
             print(couponUUID)
             peripheralManager.stopAdvertising()
-            peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey: "ODIN-iOS",
-                                            CBAdvertisementDataServiceUUIDsKey: [CBUUID(string: couponUUID)]])
+            peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey: "ODIN-" + coupon + studyId,
+                                             CBAdvertisementDataServiceUUIDsKey: [CBUUID(string: couponUUID)]])
         }
     }
     

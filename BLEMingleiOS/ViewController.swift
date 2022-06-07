@@ -8,6 +8,7 @@ class ViewController: UIViewController, UITextViewDelegate {
     var bleMingle: BLEMingle!
 
     @IBAction func sendData(_ sender: AnyObject) {
+        textView.text = "test"
         let dataToSend = textView.text.data(using: String.Encoding.utf8)
 
         bleMingle.sendDataToPeripheral(data: dataToSend! as NSData)
@@ -59,6 +60,7 @@ class ViewController: UIViewController, UITextViewDelegate {
 
         let delay = 2.0
         let time = DispatchTime.now() + delay
+        
         DispatchQueue.main.asyncAfter(deadline: time) {
             self.toggleSwitch()
         }
